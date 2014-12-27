@@ -1,20 +1,19 @@
 <?php
     NAMESPACE kcfinder;
 ?>
-<script src="js/index.php" type="text/javascript"></script>
-<script src="js_localize.php?lng=<?php echo $this->lang ?>" type="text/javascript"></script>
+<script src="<?php echo $this->config['baseUrl']; ?>/js/index.php" type="text/javascript"></script>
+<script src="<?php echo $this->config['baseUrl']; ?>/js_localize.php?lng=<?php echo $this->lang ?>" type="text/javascript"></script>
 <?php
-    IF ($this->opener['name'] == "tinymce"):
+    if ($this->opener['name'] == "tinymce"):
 ?>
 <script src="<?php echo $this->config['_tinyMCEPath'] ?>/tiny_mce_popup.js" type="text/javascript"></script>
 <?php
-    ENDIF;
-
-    IF (file_exists("themes/{$this->config['theme']}/js.php")):
+    endif;
+    if (file_exists(KCFINDER_ROOT_PATH . "/themes/{$this->config['theme']}/js.php")):
 ?>
-<script src="themes/<?php echo $this->config['theme'] ?>/js.php" type="text/javascript"></script>
+<script src="<?php echo $this->config['baseUrl']; ?>/themes/<?php echo $this->config['theme'] ?>/js.php" type="text/javascript"></script>
 <?php
-    ENDIF;
+    endif;
 ?>
 <script type="text/javascript">
 _.version = "<?php echo self::VERSION ?>";
@@ -25,6 +24,7 @@ _.type = "<?php echo text::jsValue($this->type) ?>";
 _.theme = "<?php echo text::jsValue($this->config['theme']) ?>";
 _.access = <?php echo json_encode($this->config['access']) ?>;
 _.dir = "<?php echo text::jsValue($this->session['dir']) ?>";
+_.baseUrl = "<?php echo $this->config['baseUrl']; ?>";
 _.uploadURL = "<?php echo text::jsValue($this->config['uploadURL']) ?>";
 _.thumbsURL = _.uploadURL + "/<?php echo text::jsValue($this->config['thumbsDir']) ?>";
 _.opener = <?php echo json_encode($this->opener) ?>;

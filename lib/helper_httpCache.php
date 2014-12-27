@@ -72,6 +72,10 @@ class httpCache {
   * @param mixed $sendHeaders */
 
     static function checkMTime($mtime, $sendHeaders=null) {
+        if (headers_sent($filename, $linenum)) {
+            return;
+        }
+        
         header("Last-Modified: " . gmdate("D, d M Y H:i:s", $mtime) . " GMT");
 
         $headers = function_exists("getallheaders")

@@ -30,17 +30,23 @@ if (!preg_match('/^(\d+\.\d+)/', PHP_VERSION, $ver) || ($ver[1] < 5.3))
 if (ini_get("safe_mode"))
     die("The \"safe_mode\" PHP ini setting is turned on! You cannot run KCFinder in safe mode.");
 
+    
+defined('KCFINDER_ROOT_PATH') || define('KCFINDER_ROOT_PATH', dirname(__DIR__));
+defined('KCFINDER_CONFIG') || define('KCFINDER_CONFIG', KCFINDER_ROOT_PATH . '/conf/config.php');
+
 
 // CMS INTEGRATION
 if (isset($_GET['cms']) &&
     (basename($_GET['cms']) == $_GET['cms']) &&
-    is_file("integration/{$_GET['cms']}.php")
-)
-    require "integration/{$_GET['cms']}.php";
+    is_file(KCFINDER_ROOT_PATH. "integration/{$_GET['cms']}.php")
+) {
+    require KCFINDER_ROOT_PATH. "integration/{$_GET['cms']}.php";
+}
 
 
 // REGISTER AUTOLOAD FUNCTION
-require "core/autoload.php";
+require KCFINDER_ROOT_PATH . "/core/autoload.php";
+
 
 
 // json_encode() IMPLEMENTATION IF JSON EXTENSION IS MISSING

@@ -118,9 +118,7 @@ tr.file > td.size {
 }
 
 #toolbar a {
-    padding-left: 20px;
     text-decoration: none;
-    background: no-repeat left center;
 }
 
 #toolbar a:hover, a[href="#upload"].uploadHover {

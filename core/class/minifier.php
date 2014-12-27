@@ -25,7 +25,7 @@ class minifier {
     );
 
     public function __construct($type=null) {
-        $this->config = require("conf/config.php");
+        $this->config = require(KCFINDER_CONFIG);
         $type = strtolower($type);
         if (isset($this->mime[$type]))
             $this->type = $type;
@@ -41,7 +41,7 @@ class minifier {
         $mtFiles = array(
             __FILE__,
             $_SERVER['SCRIPT_FILENAME'],
-            "conf/config.php"
+            KCFINDER_CONFIG
         );
 
         // GET SOURCE CODE FILES
@@ -58,13 +58,14 @@ class minifier {
                 $mtime = $fmtime;
         }
 
-        $header = "Content-Type: {$this->mime[$this->type]}";
-
-        // GET SOURCE CODE FROM CLIENT HTTP CACHE IF EXISTS
-        httpCache::checkMTime($mtime, $header);
-
         // OUTPUT SOURCE CODE
-        header($header);
+        if (!headers_sent()) {
+            $header = "Content-Type: {$this->mime[$this->type]}";
+            // GET SOURCE CODE FROM CLIENT HTTP CACHE IF EXISTS
+            httpCache::checkMTime($mtime, $header);
+            header($header);
+        }
+        
 
         // GET SOURCE CODE FROM SERVER-SIDE CACHE
         if (($cacheFile !== null) &&
@@ -75,7 +76,7 @@ class minifier {
             )                                           // the script will output it always
         ) {                                             // with its distribution content
             readfile($cacheFile);
-            die;
+            return;
         }
 
         // MINIFY AND JOIN SOURCE CODE
@@ -101,7 +102,7 @@ class minifier {
             )
         ) {
             file_put_contents($cacheFile, $source);
-            touch($cacheFile, $mtime);
+            @touch($cacheFile, $mtime);
         }
 
         // OUTPUT SOURCE CODE

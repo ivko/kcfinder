@@ -3,8 +3,19 @@
 <head>
 <title>KCFinder: /<?php echo $this->session['dir'] ?></title>
 <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-<?php INCLUDE "tpl/tpl_css.php" ?>
-<?php INCLUDE "tpl/tpl_javascript.php" ?>
+<?php
+if (is_file($this->config['cssTpl'])) {
+    include $this->config['cssTpl'];
+} else {
+    echo $this->config['cssTpl'];
+}
+if (is_file($this->config['javascriptTpl'])) {
+    include $this->config['javascriptTpl'];
+} else {
+    echo $this->config['javascriptTpl'];
+}
+?>
+
 </head>
 <body>
 <div id="resizer"></div>
@@ -20,12 +31,13 @@
 
     <div id="toolbar">
         <div>
-        <a href="kcact:upload"><span><?php echo $this->label("Upload") ?></span></a>
-        <a href="kcact:refresh"><span><?php echo $this->label("Refresh") ?></span></a>
-        <a href="kcact:settings"><span><?php echo $this->label("Settings") ?></span></a>
-        <a href="kcact:maximize"><span><?php echo $this->label("Maximize") ?></span></a>
-        <a href="kcact:about"><span><?php echo $this->label("About") ?></span></a>
-        <div id="loading"></div>
+            
+            <a class="btn btn-default" href="kcact:upload"><span><?php echo $this->label("Upload") ?></span></a>
+            <a class="btn btn-default" href="kcact:refresh"><span><?php echo $this->label("Refresh") ?></span></a>
+            <a class="btn btn-default" href="kcact:settings"><span><?php echo $this->label("Settings") ?></span></a>
+            <a class="btn btn-default" href="kcact:maximize"><span><?php echo $this->label("Maximize") ?></span></a>
+            <!--a href="kcact:about"><span><?php echo $this->label("About") ?></span></a-->
+            <div id="loading"></div>
         </div>
     </div>
 
@@ -75,9 +87,9 @@
     </fieldset>
     </div>
 
-    <div>
+    <!--div>
         <select id="lang"></select>
-    </div>
+    </div-->
 
     </div>
 

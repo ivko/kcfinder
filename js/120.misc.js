@@ -80,7 +80,7 @@ _.humanSize = function(size) {
 _.getURL = function(act, lang) {
     if (!lang)
         lang = _.lang;
-    var url = "browse.php?type=" + encodeURIComponent(_.type) + "&lng=" + encodeURIComponent(lang);
+    var url = _.apiUrl +"?type=" + encodeURIComponent(_.type) + "&lng=" + encodeURIComponent(lang);
     if (_.opener.name)
         url += "&opener=" + encodeURIComponent(_.opener.name);
     if (act)
@@ -89,6 +89,7 @@ _.getURL = function(act, lang) {
         url += "&cms=" + encodeURIComponent(_.cms);
     return url;
 };
+    
 
 _.label = function(index, data) {
     var label = _.labels[index] ? _.labels[index] : index;

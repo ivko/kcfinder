@@ -71,11 +71,11 @@ class browser extends uploader {
             }
         }
 
-        if (isset($_GET['theme']) &&
-            $this->checkFilename($_GET['theme']) &&
-            is_dir("themes/{$_GET['theme']}")
-        )
+        if (isset($_GET['theme']) && $this->checkFilename($_GET['theme']) &&
+            is_dir(KCFINDER_ROOT_PATH . "/themes/{$_GET['theme']}")
+        ) {
             $this->config['theme'] = $_GET['theme'];
+        }
     }
 
     public function action() {
@@ -126,11 +126,13 @@ class browser extends uploader {
     }
 
     protected function act_browser() {
+        
         if (isset($_GET['dir'])) {
             $dir = "{$this->typeDir}/{$_GET['dir']}";
             if ($this->checkFilePath($dir) && is_dir($dir) && is_readable($dir))
                 $this->session['dir'] = path::normalize("{$this->type}/{$_GET['dir']}");
         }
+        
         return $this->output();
     }
 
@@ -734,8 +736,8 @@ class browser extends uploader {
             if ($stat === false) continue;
             $name = basename($file);
             $ext = file::getExtension($file);
-            $bigIcon = file_exists("themes/{$this->config['theme']}/img/files/big/$ext.png");
-            $smallIcon = file_exists("themes/{$this->config['theme']}/img/files/small/$ext.png");
+            $bigIcon = file_exists(KCFINDER_ROOT_PATH . "/themes/{$this->config['theme']}/img/files/big/$ext.png");
+            $smallIcon = file_exists(KCFINDER_ROOT_PATH . "/themes/{$this->config['theme']}/img/files/small/$ext.png");
             $thumb = file_exists("$thumbDir/$name");
             $return[] = array(
                 'name' => stripcslashes($name),
@@ -857,14 +859,17 @@ class browser extends uploader {
         if ($template === null)
             $template = $this->action;
 
-        if (file_exists("tpl/tpl_$template.php")) {
+        if (file_exists(KCFINDER_ROOT_PATH . "/tpl/tpl_$template.php")) {
             ob_start();
             $eval = "unset(\$data);unset(\$template);unset(\$eval);";
             $_ = $data;
-            foreach (array_keys($data) as $key)
-                if (preg_match('/^[a-z\d_]+$/i', $key))
+            foreach (array_keys($data) as $key) {
+                if (preg_match('/^[a-z\d_]+$/i', $key)) {
                     $eval .= "\$$key=\$_['$key'];";
-            $eval .= "unset(\$_);require \"tpl/tpl_$template.php\";";
+                }
+            }
+            $eval .= 'unset($_);require KCFINDER_ROOT_PATH . "/tpl/tpl_' . $template . '.php";';
+            
             eval($eval);
             return ob_get_clean();
         }
@@ -911,7 +916,7 @@ class browser extends uploader {
             @unlink($file);
     }
 
-    protected function getLangs() {
+    public function getLangs() {
         if (isset($this->session['langs']))
             return $this->session['langs'];
 

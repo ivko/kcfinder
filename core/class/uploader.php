@@ -108,26 +108,28 @@ class uploader {
             $this->file = &$_FILES[key($_FILES)];
 
         // CONFIG & SESSION SETUP
-        $session = new session("conf/config.php");
+        $session = new session(KCFINDER_CONFIG);
         $this->config = $session->getConfig();
         $this->session = &$session->values;
 
         // IMAGE DRIVER INIT
         if (isset($this->config['imageDriversPriority'])) {
-            $this->config['imageDriversPriority'] =
-                text::clearWhitespaces($this->config['imageDriversPriority']);
+            $this->config['imageDriversPriority'] = text::clearWhitespaces($this->config['imageDriversPriority']);
             $driver = image::getDriver(explode(' ', $this->config['imageDriversPriority']));
-            if ($driver !== false)
+            if ($driver !== false) {
                 $this->imageDriver = $driver;
+            }
         }
         if ((!isset($driver) || ($driver === false)) &&
             (image::getDriver(array($this->imageDriver)) === false)
-        )
+        ) {
             $this->backMsg("Cannot find any of the supported PHP image extensions!");
+        }
 
         // WATERMARK INIT
-        if (isset($this->config['watermark']) && is_string($this->config['watermark']))
+        if (isset($this->config['watermark']) && is_string($this->config['watermark'])) {
             $this->config['watermark'] = array('file' => $this->config['watermark']);
+        }
 
         // GET TYPE DIRECTORY
         $this->types = &$this->config['types'];
@@ -153,12 +155,14 @@ class uploader {
         $ip = '/^' . implode('\.', array($ip, $ip, $ip, $ip)) . '$/';
         if (preg_match($ip, $_SERVER['HTTP_HOST']) ||
             preg_match('/^[^\.]+$/', $_SERVER['HTTP_HOST'])
-        )
+        ) {
             $this->config['cookieDomain'] = "";
+        }
         elseif (!strlen($this->config['cookieDomain']))
             $this->config['cookieDomain'] = $_SERVER['HTTP_HOST'];
-        if (!strlen($this->config['cookiePath']))
+        if (!strlen($this->config['cookiePath'])) {
             $this->config['cookiePath'] = "/";
+        }
 
         // UPLOAD FOLDER INIT
 
@@ -169,6 +173,7 @@ class uploader {
             list($unused, $protocol, $domain, $unused, $port, $path) = $patt;
             $path = path::normalize($path);
             $this->config['uploadURL'] = "$protocol://$domain" . (strlen($port) ? ":$port" : "") . "/$path";
+            
             $this->config['uploadDir'] = strlen($this->config['uploadDir'])
                 ? path::normalize($this->config['uploadDir'])
                 : path::url2fullPath("/$path");
@@ -214,11 +219,12 @@ class uploader {
                     $this->opener['TinyMCE'] = array('field' => $_GET['field']);
             }
 
-        } else
+        } else {
             $this->opener['name'] = false;
+        }
 
         // LOCALIZATION
-        foreach ($this->langInputNames as $key)
+        foreach ($this->langInputNames as $key) {
             if (isset($_GET[$key]) &&
                 preg_match('/^[a-z][a-z\._\-]*$/i', $_GET[$key]) &&
                 file_exists("lang/" . strtolower($_GET[$key]) . ".php")
@@ -226,6 +232,8 @@ class uploader {
                 $this->lang = $_GET[$key];
                 break;
             }
+        }
+        
         $this->localize($this->lang);
 
         // IF BROWSER IS ENABLED
@@ -241,23 +249,30 @@ class uploader {
             ) {
                 $htaccess = "{$this->config['uploadDir']}/.htaccess";
                 $original = $this->get_htaccess();
+                
                 if (!file_exists($htaccess)) {
-                    if (!@file_put_contents($htaccess, $original))
+                    if (!@file_put_contents($htaccess, $original)) {
                         $this->backMsg("Cannot write to upload folder. {$this->config['uploadDir']}");
+                    }
                 } else {
-                    if (false === ($data = @file_get_contents($htaccess)))
+                    
+                    if (false === ($data = @file_get_contents($htaccess))) {
                         $this->backMsg("Cannot read .htaccess");
-                    if (($data != $original) && !@file_put_contents($htaccess, $original))
+                    }
+                    if (($data != $original) && !@file_put_contents($htaccess, $original)) {
                         $this->backMsg("Incorrect .htaccess file. Cannot rewrite it!");
+                    }
                 }
             }
-
+            
             // CHECK & CREATE UPLOAD FOLDER
             if (!is_dir($this->typeDir)) {
-                if (!mkdir($this->typeDir, $this->config['dirPerms']))
+                if (!mkdir($this->typeDir, $this->config['dirPerms'])) {
                     $this->backMsg("Cannot create {dir} folder.", array('dir' => $this->type));
-            } elseif (!is_readable($this->typeDir))
+                }
+            } elseif (!is_readable($this->typeDir)) {
                 $this->backMsg("Cannot read upload folder.");
+            }
         }
     }
 
@@ -655,7 +670,7 @@ class uploader {
     }
 
     protected function localize($langCode) {
-        require "lang/{$langCode}.php";
+        require KCFINDER_ROOT_PATH . "/lang/{$langCode}.php";
         setlocale(LC_ALL, $lang['_locale']);
         $this->charset = $lang['_charset'];
         $this->dateTimeFull = $lang['_dateTimeFull'];
@@ -712,6 +727,10 @@ class uploader {
         echo "<html><body>$js</body></html>";
     }
 
+    public function getConfig() {
+        return $this->config;
+    }
+    
     protected function callBack_ckeditor($url, $message) {
         $CKfuncNum = isset($this->opener['CKEditor']['funcNum']) ? $this->opener['CKEditor']['funcNum'] : 0;
         if (!$CKfuncNum) $CKfuncNum = 0;
@@ -761,6 +780,6 @@ if (window.opener) window.close();
     }
 
     protected function get_htaccess() {
-        return file_get_contents("conf/upload.htaccess");
+        return file_get_contents(KCFINDER_ROOT_PATH . "/conf/upload.htaccess");
     }
 }
