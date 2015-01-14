@@ -169,9 +169,8 @@ span.brace {
 span.current {
     transition: .3s;
     background-image: url(img/tree/folder.png);
-    background-color: #3b98d6;
-    border-color: #3b98d6;
-    
+    border-color: #46B8DA;
+    background-color: #5BC0DE;
 }
 span.regular {
     transition: .3s;
@@ -179,9 +178,10 @@ span.regular {
     background-color: transparent;
 }
 span.regular:hover, span.context, a.drag > span.folder, #clipboard div:hover {
+    color: #333;
     transition: .3s;
-    background-color: #c6c6c6;
-    border-color: #c6c6c6;
+    background-color: #F7F7F7;
+    border-color: #F7F7F7;
 }
 span.opened {
     background-image: url(img/tree/minus.png);
@@ -203,13 +203,14 @@ div.file {
     border-radius: 4px;
 }
 div.file:hover {
+    color: #333;
     border-color: #aaa;
-    background: #c6c6c6;
-    background: -webkit-linear-gradient(top, #e7e7e7, #c6c6c6);
-    background: -moz-linear-gradient(top, #e7e7e7, #c6c6c6);
-    background: -ms-linear-gradient(top, #e7e7e7, #c6c6c6);
-    background: -o-linear-gradient(top, #e7e7e7, #c6c6c6);
-    background: linear-gradient(to bottom, #e7e7e7, #c6c6c6);
+    background: #F7F7F7;
+    background: -webkit-linear-gradient(top, #e7e7e7, #F7F7F7);
+    background: -moz-linear-gradient(top, #e7e7e7, #F7F7F7);
+    background: -ms-linear-gradient(top, #e7e7e7, #F7F7F7);
+    background: -o-linear-gradient(top, #e7e7e7, #F7F7F7);
+    background: linear-gradient(to bottom, #e7e7e7, #F7F7F7);
 }
 div.file .name {
     margin-top: 4px;

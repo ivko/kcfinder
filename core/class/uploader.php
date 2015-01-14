@@ -143,9 +143,11 @@ class uploader {
 
         // LOAD TYPE DIRECTORY SPECIFIC CONFIGURATION IF EXISTS
         if (is_array($this->types[$this->type])) {
-            foreach ($this->types[$this->type] as $key => $val)
-                if (in_array($key, $this->typeSettings))
+            foreach ($this->types[$this->type] as $key => $val){
+                if (in_array($key, $this->typeSettings)) {
                     $this->config[$key] = $val;
+                }
+            }
             $this->types[$this->type] = isset($this->types[$this->type]['type'])
                 ? $this->types[$this->type]['type'] : "";
         }

@@ -706,7 +706,7 @@ class browser extends uploader {
         $thumbDir = "{$this->config['uploadDir']}/{$this->config['thumbsDir']}/$dir";
         $dir = "{$this->config['uploadDir']}/$dir";
         $return = array();
-        $files = dir::content($dir, array('types' => "file"));
+        $files = dir::content($dir, array('types' => "file", 'pattern' => $this->config['filePattern']));
         if ($files === false)
             return $return;
 

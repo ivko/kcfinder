@@ -25,7 +25,7 @@ return array(
     'uploadURL' => "upload",
     'uploadDir' => "",
     'theme' => "default",
-
+    'filePattern' => '/./',
     'types' => array(
 
     // (F)CKEditor types
