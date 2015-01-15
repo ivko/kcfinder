@@ -159,7 +159,7 @@ class browser extends uploader {
             $this->sendDefaultThumb();
 
         $dir = $this->getDir();
-        $file = "{$this->thumbsTypeDir}/{$_GET['dir']}/${_GET['file']}";
+        $file = "{$this->thumbsTypeDir}/{$_GET['dir']}/{$_GET['file']}";
 
         // Create thumbnail
         if (!is_file($file) || !is_readable($file)) {
@@ -691,12 +691,13 @@ class browser extends uploader {
     }
 
     protected function sendDefaultThumb($file=null) {
+        
         if ($file !== null) {
             $ext = file::getExtension($file);
-            $thumb = "themes/{$this->config['theme']}/img/files/big/$ext.png";
+            $thumb = $this->config['baseUrl'] . "/themes/{$this->config['theme']}/img/files/big/$ext.png";
         }
         if (!isset($thumb) || !file_exists($thumb))
-            $thumb = "themes/{$this->config['theme']}/img/files/big/..png";
+            $thumb = $this->config['baseUrl'] . "/themes/{$this->config['theme']}/img/files/big/..png";
         header("Content-Type: image/png");
         readfile($thumb);
         die;

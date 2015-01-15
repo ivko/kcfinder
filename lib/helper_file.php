@@ -207,6 +207,17 @@ class file {
         $string = htmlentities($filename, ENT_QUOTES, 'UTF-8');
         if (strpos($string, '&') !== false)
             $filename = html_entity_decode(preg_replace('~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|tilde|uml);~i', '$1', $string), ENT_QUOTES, 'UTF-8');
+        
+        $cyr  = array('а','б','в','г','д','e','ж','з','и','й','к','л','м','н','о','п','р','с','т','у', 
+            'ф','х','ц','ч','ш','щ','ъ','ь', 'ю','я','А','Б','В','Г','Д','Е','Ж','З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У',
+            'Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ь', 'Ю','Я' );
+        $lat = array( 'a','b','v','g','d','e','zh','z','i','y','k','l','m','n','o','p','r','s','t','u',
+            'f' ,'h' ,'ts' ,'ch','sh' ,'sht' ,'a' ,'y' ,'yu' ,'ya','A','B','V','G','D','E','Zh',
+            'Z','I','Y','K','L','M','N','O','P','R','S','T','U',
+            'F' ,'H' ,'Ts' ,'Ch','Sh' ,'Sht' ,'A' ,'Y' ,'Yu' ,'Ya' );
+        
+        $filename = str_replace($cyr, $lat, $filename);
+
         $filename = trim(preg_replace('~[^0-9a-z\.\- ]~i', "_", $filename));
         return $filename;
     }
