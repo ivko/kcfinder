@@ -152,16 +152,18 @@ class uploader {
                 ? $this->types[$this->type]['type'] : "";
         }
 
+	list($HttpHost) = explode(':',$_SERVER['HTTP_HOST']);
+
         // COOKIES INIT
         $ip = '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)';
         $ip = '/^' . implode('\.', array($ip, $ip, $ip, $ip)) . '$/';
-        if (preg_match($ip, $_SERVER['HTTP_HOST']) ||
-            preg_match('/^[^\.]+$/', $_SERVER['HTTP_HOST'])
+        if (preg_match($ip, $HttpHost) ||
+            preg_match('/^[^\.]+$/', $HttpHost)
         ) {
             $this->config['cookieDomain'] = "";
         }
         elseif (!strlen($this->config['cookieDomain']))
-            $this->config['cookieDomain'] = $_SERVER['HTTP_HOST'];
+            $this->config['cookieDomain'] = $HttpHost;
         if (!strlen($this->config['cookiePath'])) {
             $this->config['cookiePath'] = "/";
         }
